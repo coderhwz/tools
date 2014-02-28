@@ -12,10 +12,15 @@ if [ ! -d ${WORKTREE} ]; then
 	mkdir ${WORKTREE}
 fi
 if [[ ${MESSAGE} == *\[release\]* || ${MESSAGE} == *\[assets\]* ]];then
+	echo 'releasing.....'
 	git --work-tree=${WORKTREE} --git-dir=${GIT_DIR} checkout -f
-	echo 'release'
+	echo 'release over'
 	if [[ ${MESSAGE} == *\[assets\]*  ]];then
+		echo 'changing asserts code .....'
 		sed -i '.bak' "s/\(\$config\['asset_flag'\] \= \)'[0-9]*';/\1'${TIMESTAMP}';/g" $WORKTREE/config.php
-		echo 'replace'
+		echo 'change over'
 	fi
+	echo 'clearing cache....'
+	# staff
+	echo 'clear cache over'
 fi
