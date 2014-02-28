@@ -1,0 +1,21 @@
+#!/bin/sh
+
+WORKTREE=/Users/osx001/testspaces/repo/www/ 
+GIT_DIR=/Users/osx001/testspaces/repo/test
+
+cd ${GIT_DIR}
+MESSAGE=$(git log -1 HEAD --pretty=format:%s) 
+TIMESTAMP=`date +%s`
+
+
+if [ ! -d ${WORKTREE} ]; then
+	mkdir ${WORKTREE}
+fi
+if [[ ${MESSAGE} == *\[release\]* || ${MESSAGE} == *\[assets\]* ]];then
+	git --work-tree=${WORKTREE} --git-dir=${GIT_DIR} checkout -f
+	echo 'release'
+	if [[ ${MESSAGE} == *\[assets\]*  ]];then
+		sed -i '.bak' "s/\(\$config\['asset_flag'\] \= \)'[0-9]*';/\1'${TIMESTAMP}';/g" $WORKTREE/config.php
+		echo 'replace'
+	fi
+fi
